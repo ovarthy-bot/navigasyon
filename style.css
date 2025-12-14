@@ -110,6 +110,12 @@ h1 {
 /* MOBİL UYUMLULUK AYARLARI */
 /* -------------------------------------- */
 @media (max-width: 600px) {
+      #watermark {
+    font-size: 8px;
+    top: 6px;
+    right: 6px;
+    opacity: 0.5;
+  }
     .grid-container {
         /*
         ESKİ: grid-template-columns: 1fr; (Tek sütun)
