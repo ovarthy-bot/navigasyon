@@ -77,6 +77,19 @@ h1 {
     transform: scale(1.05);
 }
 
+#watermark {
+  position: fixed;
+  top: 8px;
+  right: 10px;
+  font-size: 10px;
+  color: #777;
+  opacity: 0.7;
+  z-index: 9999;
+  pointer-events: none;
+  font-family: Arial, sans-serif;
+}
+
+
 /* Başlık Ayarları */
 .app-title {
     position: absolute;
