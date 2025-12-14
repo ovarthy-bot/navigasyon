@@ -26,6 +26,13 @@ h1 {
     width: 100%;
 }
 
+@media (max-width: 600px) {
+    .grid-container {
+        /* Tek sütun ayarı: Tüm butonlar alt alta sıralanır. */
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+
 /* Kısayol Linki Stili */
 .app-link {
     text-decoration: none; /* Link alt çizgisini kaldırır */
@@ -38,30 +45,30 @@ h1 {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
-    overflow: hidden; /* Taşmayı engeller */
+    overflow: hidden; 
     text-align: center;
-    padding-bottom: 10px;
-    /* Kartın kare olmasını sağlamak için: yükseklik genişliğe eşittir (içerik hariç) */
-    position: relative;
-    padding-top: 100%; /* İç padding sayesinde yükseklik, genişliğin %100'ü olur (kare) */
+    
+    /* Kare olmasını sağlayan teknik: Yükseklik = Genişlik */
+    width: 100%; 
+    height: 0; /* İçerik için yüksekliği sıfırlıyoruz */
+    padding-top: 100%; /* Yüksekliği, genişliğin %100'ü yapar (Kare Formül) */
+    position: relative; /* İçindeki resim ve başlık için referans noktası */
 }
 
-/* Hover Efekti */
-.app-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Görsel Stili */
+/* Görsel Stili: Resmi karenin içine sığdırır */
 .app-card img {
-    position: absolute;
+    position: absolute; /* .app-card'a göre konumlanır */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Resmi kutuya sığdırır, orantısını korur */
-    padding: 10px; /* Görselin kenarlardan boşluk bırakması */
-    box-sizing: border-box;
+    
+    /* Resmin kare kutuya sığmasını ve orantısının bozulmamasını sağlar. */
+    object-fit: cover; 
+    
+    /* İsteğe bağlı: Resim etrafında biraz boşluk bırakır */
+    padding: 10px; 
+    box-sizing: border-box; 
 }
 
 /* Başlık Stili */
