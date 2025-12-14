@@ -1,0 +1,78 @@
+/* style.css */
+
+/* Genel Ayarlar */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 40px;
+}
+
+/* Kapsayıcı: Grid Yapısı */
+.grid-container {
+    display: grid;
+    /* 3 sütunlu düzen. Boyutlar otomatik olarak ayarlanır. */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 30px; /* Kutular arası boşluk */
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* Kısayol Linki Stili */
+.app-link {
+    text-decoration: none; /* Link alt çizgisini kaldırır */
+    color: inherit;
+}
+
+/* Kare Kart Stili */
+.app-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden; /* Taşmayı engeller */
+    text-align: center;
+    padding-bottom: 10px;
+    /* Kartın kare olmasını sağlamak için: yükseklik genişliğe eşittir (içerik hariç) */
+    position: relative;
+    padding-top: 100%; /* İç padding sayesinde yükseklik, genişliğin %100'ü olur (kare) */
+}
+
+/* Hover Efekti */
+.app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Görsel Stili */
+.app-card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Resmi kutuya sığdırır, orantısını korur */
+    padding: 10px; /* Görselin kenarlardan boşluk bırakması */
+    box-sizing: border-box;
+}
+
+/* Başlık Stili */
+.app-title {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Görsel üzerinde okunurluk için yarı saydam arka plan */
+    color: white;
+    padding: 8px 0;
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+}
