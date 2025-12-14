@@ -98,13 +98,18 @@ h1 {
 /* -------------------------------------- */
 @media (max-width: 600px) {
     .grid-container {
-        /* Mobilde tek sütun olsun */
-        grid-template-columns: 1fr; 
-        gap: 20px;
+        /*
+        ESKİ: grid-template-columns: 1fr; (Tek sütun)
+        YENİ: Ekranı 2 eşit sütuna böler ve butonları küçültür
+        */
+        grid-template-columns: 1fr 1fr; 
+        gap: 10px; /* Kutular arası boşluğu küçülttük */
+        padding: 5px; /* Kenar boşluklarını da hafifçe küçültelim */
     }
     
-    /* Mobilde başlık biraz daha küçük olabilir */
+    /* Kart içeriğindeki başlık boyutunu biraz daha küçültelim */
     .app-title {
-        font-size: 1em;
+        font-size: 0.9em; /* Başlık boyutunu küçülttük */
+        padding: 15px 5px 5px 5px; /* Başlık altındaki boşluğu küçülttük */
     }
 }
