@@ -1,11 +1,10 @@
-/* style.css - DÜZELTİLMİŞ TAM SÜRÜM */
+/* style.css - KARANLIK TEMA SÜRÜMÜ */
 
-/* Tüm elementler için kutu modelini düzeltir (Kaymaları engeller) */
 * {
     box-sizing: border-box;
 }
 
-/* Genel Sayfa Ayarları */
+/* Genel Sayfa Ayarları - Arka plan koyulaştırıldı */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
@@ -13,52 +12,52 @@ body {
     align-items: center;
     margin: 0;
     padding: 20px;
-    background-color: #f0f2f5;
+    background-color: #121212; /* Derin siyah/gri arka plan */
+    color: #e0e0e0; /* Genel yazı rengi açık gri */
 }
 
+/* Başlık rengi beyaza yakın yapıldı */
 h1 {
-    color: #333;
+    color: #ffffff;
     margin-bottom: 40px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
-/* Kapsayıcı: Izgara (Grid) Yapısı */
+/* Kapsayıcı Yapısı */
 .grid-container {
     display: grid;
-    /* Masaüstü: Otomatik sığdır, en az 250px genişlik */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 30px; /* Kutular arası boşluk */
+    gap: 30px; 
     max-width: 1200px;
     width: 100%;
     padding: 10px;
 }
 
-/* Link Etiketi Ayarı (Butonların düzgün durması için) */
 .app-link {
     text-decoration: none;
     color: inherit;
-    display: block; /* Linkin kutu gibi davranmasını sağlar */
+    display: block; 
 }
 
-/* Kare Kart Stili */
+/* Kare Kart Stili - Arka plan koyu gri yapıldı */
 .app-card {
-    background-color: white;
+    background-color: #1e1e1e; /* Kart rengi */
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Gölgeler derinleştirildi */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden; 
     position: relative;
-    
-    /* KARE OLMA BÜYÜSÜ: */
     width: 100%; 
-    padding-top: 100%; /* Yükseklik = Genişlik */
+    padding-top: 100%; 
+    border: 1px solid #333; /* Hafif kenarlık eklendi */
 }
 
-/* Hover (Üzerine gelince) Efekti */
+/* Hover Efekti */
 .app-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    border-color: #444;
 }
 
 /* Resim Ayarları */
@@ -68,27 +67,28 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Resmi kutuya sığdırır ve keser */
-    transition: transform 0.5s ease;
+    object-fit: cover;
+    opacity: 0.8; /* Resimler karanlık modda göz yormaması için hafif karartıldı */
+    transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
-/* Hover durumunda resim hafifçe büyüsün */
 .app-card:hover img {
-    transform: scale(1.05);
+    transform: scale(1.08);
+    opacity: 1; /* Üzerine gelince resim parlasın */
 }
 
+/* Watermark Ayarı */
 #watermark {
   position: fixed;
   top: 8px;
   right: 10px;
   font-size: 10px;
-  color: #777;
-  opacity: 0.7;
+  color: #555; /* Daha sönük bir renk */
+  opacity: 0.5;
   z-index: 9999;
   pointer-events: none;
   font-family: Arial, sans-serif;
 }
-
 
 /* Başlık Ayarları */
 .app-title {
@@ -96,39 +96,29 @@ h1 {
     bottom: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    color: white;
+    /* Alt taraftaki degrade karartma güçlendirildi */
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    color: #ffffff;
     padding: 20px 10px 10px 10px;
     margin: 0;
     font-size: 1.1em;
     font-weight: bold;
     text-align: center;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
-/* -------------------------------------- */
-/* MOBİL UYUMLULUK AYARLARI */
-/* -------------------------------------- */
+/* MOBİL UYUMLULUK */
 @media (max-width: 600px) {
-      #watermark {
-    font-size: 8px;
-    top: 6px;
-    right: 6px;
-    opacity: 0.5;
-  }
-    .grid-container {
-        /*
-        ESKİ: grid-template-columns: 1fr; (Tek sütun)
-        YENİ: Ekranı 2 eşit sütuna böler ve butonları küçültür
-        */
-        grid-template-columns: 1fr 1fr; 
-        gap: 10px; /* Kutular arası boşluğu küçülttük */
-        padding: 5px; /* Kenar boşluklarını da hafifçe küçültelim */
+    #watermark {
+        font-size: 8px;
     }
-    
-    /* Kart içeriğindeki başlık boyutunu biraz daha küçültelim */
+    .grid-container {
+        grid-template-columns: 1fr 1fr; 
+        gap: 12px;
+        padding: 5px;
+    }
     .app-title {
-        font-size: 0.9em; /* Başlık boyutunu küçülttük */
-        padding: 15px 5px 5px 5px; /* Başlık altındaki boşluğu küçülttük */
+        font-size: 0.85em;
+        padding: 15px 5px 5px 5px;
     }
 }
