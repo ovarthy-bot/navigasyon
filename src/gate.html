@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Giriş</title>
+<style>
+  :root { --bg:#f4f6f9; --card:#fff; --text:#1d2330; --accent:#2f5fd0; --err:#c0392b; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151c; --card:#1d2230; --text:#e8ebf2; --accent:#6d93ea; --err:#ff6b5e; } }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg); color:var(--text); font-family:system-ui,sans-serif; padding:16px; box-sizing:border-box; }
+  form { background:var(--card); padding:28px; border-radius:12px; width:100%; max-width:340px; box-shadow:0 4px 16px rgba(0,0,0,.12); }
+  h1 { font-size:1.2rem; margin:0 0 6px; }
+  p { font-size:.9rem; opacity:.8; margin:0 0 16px; }
+  input { width:100%; box-sizing:border-box; padding:10px 12px; font-size:1rem; border:1px solid #9aa3b2; border-radius:8px; background:transparent; color:inherit; }
+  button { margin-top:12px; width:100%; padding:10px; font-size:1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  #err { color:var(--err); font-size:.85rem; min-height:1.2em; margin:10px 0 0; }
+</style>
+</head>
+<body>
+<form id="gate" autocomplete="off">
+  <h1>Uygulama Portalı</h1>
+  <p>Ekip ortak şifresini girin.</p>
+  <input type="password" id="pw" placeholder="Şifre" required>
+  <button type="submit" id="btn">Giriş</button>
+  <div id="err"></div>
+</form>
+<script>
+(function () {
+  var PAYLOAD = /*__PAYLOAD__*/null;
+  var SESSION_KEY = 'portal_session_v1';
+  var SESSION_MS = 7 * 24 * 60 * 60 * 1000;
+  var enc = new TextEncoder(), dec = new TextDecoder();
+
+  function b64ToBytes(b) { var s = atob(b), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+  function bytesToB64(a) { var s = ''; for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); }
+
+  function openPortal(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    document.replaceChild(document.importNode(doc.documentElement, true), document.documentElement);
+  }
+
+  function decryptWithKeyBits(bits) {
+    return crypto.subtle.importKey('raw', bits, 'AES-GCM', false, ['decrypt']).then(function (k) {
+      return crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBytes(PAYLOAD.i) }, k, b64ToBytes(PAYLOAD.c));
+    }).then(function (buf) { return dec.decode(buf); });
+  }
+
+  function deriveBits(password) {
+    return crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']).then(function (base) {
+      return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: b64ToBytes(PAYLOAD.s), iterations: PAYLOAD.n, hash: 'SHA-256' }, base, 256);
+    });
+  }
+
+  function loadSession() {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { return null; }
+  }
+  function saveSession(bits) {
+    try { localStorage.setItem(SESSION_KEY, JSON.stringify({ k: bytesToB64(new Uint8Array(bits)), exp: Date.now() + SESSION_MS })); } catch (e) {}
+  }
+  function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
+
+  function unlock(password, btn, err) {
+    btn.disabled = true; err.textContent = '';
+    deriveBits(password).then(function (bits) {
+      return decryptWithKeyBits(bits).then(function (html) {
+        saveSession(bits);
+        openPortal(html);
+      });
+    }).catch(function () {
+      btn.disabled = false;
+      err.textContent = 'Şifre yanlış.';
+    });
+  }
+
+  var form = document.getElementById('gate');
+  var pw = document.getElementById('pw');
+  var btn = document.getElementById('btn');
+  var err = document.getElementById('err');
+
+  // Try stored session first
+  var s = loadSession();
+  if (s && s.exp > Date.now()) {
+    decryptWithKeyBits(b64ToBytes(s.k)).then(openPortal).catch(function () { clearSession(); });
+  } else {
+    clearSession();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    unlock(pw.value, btn, err);
+  });
+})();
+</script>
+</body>
+</html>
