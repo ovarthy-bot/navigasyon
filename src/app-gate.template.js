@@ -30,6 +30,10 @@
   function readStore() {
     try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { return null; }
   }
+  // Sunucu tarafı (ör. PDF) kontrolü için aynı bileti çerez olarak da yaz
+  function setCookie(k) {
+    try { document.cookie = 'nav_k=' + encodeURIComponent(k) + '; Path=/; Max-Age=' + Math.floor(DAY / 1000) + '; SameSite=Strict' + (location.protocol === 'https:' ? '; Secure' : ''); } catch (e) {}
+  }
   function clearStore() { try { localStorage.removeItem(STORE); } catch (e) {} }
 
   var m = location.hash.match(/[#&]k=([^&]+)/);
@@ -39,6 +43,7 @@
     check(k).then(function (ok) {
       if (!ok) return deny();
       try { localStorage.setItem(STORE, JSON.stringify({ k: k, exp: Date.now() + DAY })); } catch (e) {}
+      setCookie(k);
       history.replaceState(null, '', location.pathname + location.search);
       reveal();
     });
@@ -47,7 +52,7 @@
     var s = readStore();
     if (s && s.exp > Date.now()) {
       check(s.k).then(function (ok) {
-        if (ok) reveal(); else { clearStore(); deny(); }
+        if (ok) { setCookie(s.k); reveal(); } else { clearStore(); deny(); }
       });
     } else {
       clearStore();
