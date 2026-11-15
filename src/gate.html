@@ -87,6 +87,15 @@
     clearSession();
   }
 
+  // Uygulama linkine tıklanınca, oturum anahtarını bilet olarak adrese ekle
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a.app-link');
+    if (!a) return;
+    var sess = loadSession();
+    if (!sess || !(sess.exp > Date.now())) return;
+    a.href = a.getAttribute('href').split('#')[0] + '#k=' + encodeURIComponent(sess.k);
+  }, true);
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     unlock(pw.value, btn, err);
