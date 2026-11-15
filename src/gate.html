@@ -30,7 +30,6 @@
 (function () {
   var PAYLOAD = /*__PAYLOAD__*/null;
   var SESSION_KEY = 'portal_session_v1';
-  var SESSION_MS = 7 * 24 * 60 * 60 * 1000;
   var enc = new TextEncoder(), dec = new TextDecoder();
 
   function b64ToBytes(b) { var s = atob(b), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
@@ -57,7 +56,7 @@
     try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { return null; }
   }
   function saveSession(bits) {
-    try { localStorage.setItem(SESSION_KEY, JSON.stringify({ k: bytesToB64(new Uint8Array(bits)), exp: Date.now() + SESSION_MS })); } catch (e) {}
+    try { localStorage.setItem(SESSION_KEY, JSON.stringify({ k: bytesToB64(new Uint8Array(bits)) })); } catch (e) {}
   }
   function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
 
@@ -81,7 +80,7 @@
 
   // Try stored session first
   var s = loadSession();
-  if (s && s.exp > Date.now()) {
+  if (s && s.k) {
     decryptWithKeyBits(b64ToBytes(s.k)).then(openPortal).catch(function () { clearSession(); });
   } else {
     clearSession();
@@ -92,7 +91,7 @@
     var a = e.target && e.target.closest && e.target.closest('a.app-link');
     if (!a) return;
     var sess = loadSession();
-    if (!sess || !(sess.exp > Date.now())) return;
+    if (!sess || !sess.k) return;
     a.href = a.getAttribute('href').split('#')[0] + '#k=' + encodeURIComponent(sess.k);
   }, true);
 
