@@ -1,87 +1,106 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uygulama Portalı</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Giriş</title>
+<style>
+  :root { --bg:#f4f6f9; --card:#fff; --text:#1d2330; --accent:#2f5fd0; --err:#c0392b; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151c; --card:#1d2230; --text:#e8ebf2; --accent:#6d93ea; --err:#ff6b5e; } }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg); color:var(--text); font-family:system-ui,sans-serif; padding:16px; box-sizing:border-box; }
+  form { background:var(--card); padding:28px; border-radius:12px; width:100%; max-width:340px; box-shadow:0 4px 16px rgba(0,0,0,.12); }
+  h1 { font-size:1.2rem; margin:0 0 6px; }
+  p { font-size:.9rem; opacity:.8; margin:0 0 16px; }
+  input { width:100%; box-sizing:border-box; padding:10px 12px; font-size:1rem; border:1px solid #9aa3b2; border-radius:8px; background:transparent; color:inherit; }
+  button { margin-top:12px; width:100%; padding:10px; font-size:1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  #err { color:var(--err); font-size:.85rem; min-height:1.2em; margin:10px 0 0; }
+</style>
 </head>
 <body>
-    <header>
-        <h1>Uygulama Galerisi</h1>
-    </header>
+<form id="gate" autocomplete="off">
+  <h1>Uygulama Portalı</h1>
+  <p>Ekip ortak şifresini girin.</p>
+  <input type="password" id="pw" placeholder="Şifre" required>
+  <button type="submit" id="btn">Giriş</button>
+  <div id="err"></div>
+</form>
+<script>
+(function () {
+  var PAYLOAD = {"s":"bmF2aWdhc3lvbi1nYXRlLXNhbHQtdjE=","i":"1clHfoEEij7+UhzP","c":"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","n":310000};
+  var SESSION_KEY = 'portal_session_v1';
+  var SESSION_MS = 7 * 24 * 60 * 60 * 1000;
+  var enc = new TextEncoder(), dec = new TextDecoder();
 
-    <main class="grid-container">
+  function b64ToBytes(b) { var s = atob(b), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+  function bytesToB64(a) { var s = ''; for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); }
 
+  function openPortal(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    document.replaceChild(document.importNode(doc.documentElement, true), document.documentElement);
+  }
 
-         <a href="https://ovarthy-bot.github.io/nrc_takip_dashboard/" class="app-link">
-            <div id="watermark">OnurSuperAi</div>
-            <div class="app-card">
-                <img src="resimler/nrc_list.png" alt="NRC Listesi">
-                <p class="app-title">NRC-T/C Takip- (Canlı)</p>
-            </div>
-        </a>
+  function decryptWithKeyBits(bits) {
+    return crypto.subtle.importKey('raw', bits, 'AES-GCM', false, ['decrypt']).then(function (k) {
+      return crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBytes(PAYLOAD.i) }, k, b64ToBytes(PAYLOAD.c));
+    }).then(function (buf) { return dec.decode(buf); });
+  }
 
-        <a href="https://aerolocate.ovarthy.workers.dev/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/cmm.png" alt="PN Katalog">
-                <p class="app-title">CMM'LER- (Canlı)</p>
-            </div>
-        </a>
+  function deriveBits(password) {
+    return crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']).then(function (base) {
+      return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: b64ToBytes(PAYLOAD.s), iterations: PAYLOAD.n, hash: 'SHA-256' }, base, 256);
+    });
+  }
 
+  function loadSession() {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { return null; }
+  }
+  function saveSession(bits) {
+    try { localStorage.setItem(SESSION_KEY, JSON.stringify({ k: bytesToB64(new Uint8Array(bits)), exp: Date.now() + SESSION_MS })); } catch (e) {}
+  }
+  function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
 
-        <a href="https://ovarthy-bot.github.io/malzeme_katalog_v4/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/pn.jpg" alt="PN Katalog">
-                <p class="app-title">PN Katalog- (Canlı)</p>
-            </div>
-        </a>
+  function unlock(password, btn, err) {
+    btn.disabled = true; err.textContent = '';
+    deriveBits(password).then(function (bits) {
+      return decryptWithKeyBits(bits).then(function (html) {
+        saveSession(bits);
+        openPortal(html);
+      });
+    }).catch(function () {
+      btn.disabled = false;
+      err.textContent = 'Şifre yanlış.';
+    });
+  }
 
-        <a href="https://ovarthy-bot.github.io/Asdp_v2/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/manhour.png" alt="Adam Saat Dağıtma">
-                <p class="app-title">Adam Saat Dağıtma</p>
-            </div>
-        </a>
+  var form = document.getElementById('gate');
+  var pw = document.getElementById('pw');
+  var btn = document.getElementById('btn');
+  var err = document.getElementById('err');
 
-        <a href="https://ovarthy-bot.github.io/u-ak-saha-g-revi/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/saha.png" alt="Uçak Saha Görevi">
-                <p class="app-title">Uçak Saha Görevi- (Canlı)</p>
-            </div>
-        </a>
+  // Try stored session first
+  var s = loadSession();
+  if (s && s.exp > Date.now()) {
+    decryptWithKeyBits(b64ToBytes(s.k)).then(openPortal).catch(function () { clearSession(); });
+  } else {
+    clearSession();
+  }
 
-        <a href="https://ovarthy-bot.github.io/cabin_defect_list/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/cabindefectlist.png" alt="Kabin Defect List">
-                <p class="app-title">Kabin Defect List- (Canlı)</p>
-            </div>
-        </a>
+  // Uygulama linkine tıklanınca, oturum anahtarını bilet olarak adrese ekle
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a.app-link');
+    if (!a) return;
+    var sess = loadSession();
+    if (!sess || !(sess.exp > Date.now())) return;
+    a.href = a.getAttribute('href').split('#')[0] + '#k=' + encodeURIComponent(sess.k);
+  }, true);
 
-        <a href="https://ovarthy-bot.github.io/AeroEquip-Map/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/emergency_plan.png" alt="AeroEquip Map">
-                <p class="app-title">Emergency Mapping- (Canlı)</p>
-            </div>
-        </a>
-
-                <a href="https://ovarthy-bot.github.io/pageblock/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/References.png" alt="Referans Taslakları">
-                <p class="app-title">Referans Taslakları- (Canlı)</p>
-            </div>
-        </a>
-
-                 <a href="https://ovarthy-bot.github.io/B1-Sonras-saat-a-anlar/" class="app-link">
-            <div class="app-card">
-                <img src="resimler/1686633389_6487fbad5b39f.png" alt="Referans Taslakları">
-                <p class="app-title">B1 Sonrası Saat Açanlar- (Canlı)</p>
-            </div>
-        </a>
-
-
-        
-        
-    </main>
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    unlock(pw.value, btn, err);
+  });
+})();
+</script>
 </body>
 </html>
